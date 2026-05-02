@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-docs:
+    name: Validate structure
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check required files exist
+        run: |
+          for f in SPEC.md ARCHITECTURE.md CONTRIBUTING.md CHANGELOG.md; do
+            test -f "$f" || { echo "Missing $f"; exit 1; }
+          done
+
+      - name: Check component VERSION files
+        run: |
+          for d in kernel-module rust-agent mcp-server orchestrator; do
+            test -f "$d/VERSION" || { echo "Missing $d/VERSION"; exit 1; }
+          done
+
+  # Path-filtered component jobs will be added in issue #18
