@@ -1,5 +1,7 @@
+use axum::{Json, Router, http::StatusCode, routing::get};
 use serde::Serialize;
 use std::fs;
+use tokio::net::TcpListener;
 
 const PROC_PATH: &str = "/proc/edge_sensor";
 
@@ -37,10 +39,25 @@ pub fn read_telemetry() -> Result<Telemetry, String> {
     })
 }
 
+async fn get_telemetry() -> Result<Json<Telemetry>, (StatusCode, String)> {
+    read_telemetry()
+        .map(Json)
+        .map_err(|e| (StatusCode::SERVICE_UNAVAILABLE, e))
+}
+
+async fn health() -> &'static str {
+    "ok"
+}
+
 #[tokio::main]
 async fn main() {
-    match read_telemetry() {
-        Ok(t) => println!("{}", serde_json::to_string_pretty(&t).unwrap()),
-        Err(e) => eprintln!("error: {}", e),
-    }
+    let app = Router::new()
+        .route("/telemetry", get(get_telemetry))
+        .route("/health", get(health));
+
+    let addr = "0.0.0.0:3000";
+    println!("edge-agent listening on {}", addr);
+
+    let listener = TcpListener::bind(addr).await.unwrap();
+    axum::serve(listener, app).await.unwrap();
 }
