@@ -8,8 +8,6 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), versioning foll
 
 ## [Unreleased]
 
-### rust-agent
-
 ### mcp-server
 
 ### orchestrator
@@ -17,6 +15,19 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), versioning foll
 ### deploy
 
 ### ci
+
+---
+
+## rust-agent [0.2.0] — 2026-05-04
+
+### Added
+- Telemetry struct with serde serialization
+- `/proc/edge_sensor` parser (key=value format) with graceful error handling
+- HTTP server (axum) on port 3000:
+  - `GET /telemetry` — returns JSON or 503 if source unavailable
+  - `GET /health` — returns 200 ok
+- Modular structure: `telemetry.rs`, `server.rs`, `lib.rs`
+- 5 unit tests (parsing) + 2 integration tests (HTTP endpoints)
 
 ---
 
