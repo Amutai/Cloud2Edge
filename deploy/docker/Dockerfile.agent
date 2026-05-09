@@ -1,0 +1,23 @@
+# Stage 1: Build
+FROM rust:1.95-bookworm AS builder
+
+WORKDIR /build
+COPY rust-agent/Cargo.toml rust-agent/Cargo.lock ./
+COPY rust-agent/src ./src
+
+RUN cargo build --release
+
+# Stage 2: Runtime
+FROM debian:bookworm-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /build/target/release/edge-agent /usr/local/bin/edge-agent
+
+EXPOSE 3000
+
+# Note: container needs host procfs mounted at /proc/edge_sensor
+# In k3s: hostPath volume or privileged mode with the kernel module loaded on the host
+CMD ["edge-agent"]
