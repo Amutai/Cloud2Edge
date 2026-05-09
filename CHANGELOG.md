@@ -8,8 +8,6 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), versioning foll
 
 ## [Unreleased]
 
-### mcp-server
-
 ### orchestrator
 
 ### deploy
@@ -18,7 +16,19 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), versioning foll
 
 ---
 
-## rust-agent [0.2.0] — 2026-05-04
+## mcp-server [0.2.0] — 2026-05-08
+
+### Added
+- MCP server using FastMCP SDK (stdio transport)
+- `get_telemetry` tool — queries rust-agent HTTP endpoint
+- `check_health` tool — reports agent availability
+- `restart_service(service_name)` tool — calls `systemctl restart`, real system calls
+- All tools report honest errors, no simulated responses
+- 10 protocol validation tests (pytest + pytest-asyncio)
+
+---
+
+## rust-agent [0.2.0] — 2026-05-07
 
 ### Added
 - Telemetry struct with serde serialization
@@ -31,7 +41,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), versioning foll
 
 ---
 
-## kernel-module [0.2.0] — 2026-05-04
+## kernel-module [0.2.0] — 2026-05-07
 
 ### Added
 - Out-of-tree kernel module build system (Makefile + kbuild)
