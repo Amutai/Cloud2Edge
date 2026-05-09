@@ -1,0 +1,14 @@
+FROM python:3.12-slim-bookworm
+
+WORKDIR /app
+
+COPY mcp-server/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY mcp-server/src ./src
+
+# MCP server uses stdio transport by default.
+# For remote access, override CMD with: python src/server.py --transport sse
+EXPOSE 8080
+
+CMD ["python", "src/server.py"]
