@@ -1,8 +1,9 @@
 import asyncio
+import os
 import httpx
 from mcp.server.fastmcp import FastMCP
 
-AGENT_URL = "http://localhost:3000"
+AGENT_URL = os.environ.get("AGENT_URL", "http://localhost:3000")
 
 mcp = FastMCP("edge-mcp-server")
 

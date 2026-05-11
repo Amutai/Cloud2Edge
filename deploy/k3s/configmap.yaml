@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: edge-config
+  namespace: cloud2edge
+data:
+  AGENT_URL: "http://edge-agent:3000"
+  CPU_TEMP_THRESHOLD: "80"
+  MEM_PRESSURE_THRESHOLD: "90"
+  TCP_RETRANS_THRESHOLD: "50000"
