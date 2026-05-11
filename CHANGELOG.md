@@ -10,9 +10,19 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), versioning foll
 
 ### orchestrator
 
-### deploy
-
 ### ci
+
+---
+
+## deploy [0.1.0] — 2026-05-08
+
+### Added
+- Multi-stage Dockerfile for rust-agent (debian:bookworm-slim, ~32MB)
+- Dockerfile for mcp-server (python:3.12-slim)
+- k3s manifests: namespace, configmap, agent deployment, mcp-server deployment
+- Agent pod mounts host /proc/edge_sensor via hostPath
+- MCP server reads AGENT_URL from environment (ConfigMap in k3s)
+- Resource limits sized for edge devices
 
 ---
 
