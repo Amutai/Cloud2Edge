@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edge-agent
+  namespace: cloud2edge
+  labels:
+    app: edge-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: edge-agent
+  template:
+    metadata:
+      labels:
+        app: edge-agent
+    spec:
+      containers:
+        - name: edge-agent
+          image: cloud2edge/rust-agent:0.2.0
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - name: proc-edge-sensor
+              mountPath: /proc/edge_sensor
+              readOnly: true
+          resources:
+            limits:
+              memory: "64Mi"
+              cpu: "100m"
+            requests:
+              memory: "32Mi"
+              cpu: "50m"
+      volumes:
+        - name: proc-edge-sensor
+          hostPath:
+            path: /proc/edge_sensor
+            type: File
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: edge-agent
+  namespace: cloud2edge
+spec:
+  selector:
+    app: edge-agent
+  ports:
+    - port: 3000
+      targetPort: 3000
