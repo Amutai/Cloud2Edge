@@ -8,9 +8,19 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), versioning foll
 
 ## [Unreleased]
 
-### orchestrator
-
 ### ci
+
+---
+
+## orchestrator [0.2.0] — 2026-05-11
+
+### Added
+- Agentic observe → decide → act loop with configurable poll interval
+- Threshold evaluation for CPU temp, memory pressure, TCP retransmits
+- MCP tool consumption via stdio client (spawns MCP server as subprocess)
+- Calls `restart_service` on CPU/memory breach, `check_health` on network breach
+- All config via environment variables (k3s ConfigMap compatible)
+- 13 unit tests for decision logic
 
 ---
 
