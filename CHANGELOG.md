@@ -8,7 +8,16 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), versioning foll
 
 ## [Unreleased]
 
-### ci
+---
+
+## ci [1.0.0] — 2026-05-12
+
+### Added
+- Full path-filtered GitHub Actions pipeline (Rust, Python, Docker)
+- Security scanning: cargo-audit, pip-audit, hadolint
+- Per-component jobs: build, lint, test, audit
+- README with architecture diagram, quickstart, AI client integration guide
+- MIT LICENSE
 
 ---
 
