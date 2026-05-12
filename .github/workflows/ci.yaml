@@ -52,6 +52,10 @@ jobs:
         working-directory: rust-agent
         run: cargo test
 
+      - name: Security audit
+        run: cargo install cargo-audit && cargo audit
+        working-directory: rust-agent
+
   mcp-server:
     name: MCP Server
     runs-on: ubuntu-latest
@@ -79,6 +83,10 @@ jobs:
         working-directory: mcp-server
         run: python -m pytest tests/ -v
 
+      - name: Security audit
+        run: pip install pip-audit && pip-audit -r requirements.txt
+        working-directory: mcp-server
+
   orchestrator:
     name: Orchestrator
     runs-on: ubuntu-latest
@@ -105,6 +113,10 @@ jobs:
       - name: Test
         working-directory: orchestrator
         run: python -m pytest tests/ -v
+
+      - name: Security audit
+        run: pip install pip-audit && pip-audit -r requirements.txt
+        working-directory: orchestrator
 
   docker:
     name: Docker lint
