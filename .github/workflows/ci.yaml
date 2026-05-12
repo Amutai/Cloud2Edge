@@ -25,4 +25,103 @@ jobs:
             test -f "$d/VERSION" || { echo "Missing $d/VERSION"; exit 1; }
           done
 
-  # Path-filtered component jobs will be added in issue #18
+  rust-agent:
+    name: Rust Agent
+    runs-on: ubuntu-latest
+    if: >
+      github.event_name == 'push' ||
+      contains(join(github.event.pull_request.labels.*.name, ','), 'rust') ||
+      true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+
+      - name: Check
+        working-directory: rust-agent
+        run: cargo check
+
+      - name: Clippy
+        working-directory: rust-agent
+        run: cargo clippy -- -D warnings
+
+      - name: Test
+        working-directory: rust-agent
+        run: cargo test
+
+  mcp-server:
+    name: MCP Server
+    runs-on: ubuntu-latest
+    if: >
+      github.event_name == 'push' ||
+      contains(join(github.event.pull_request.labels.*.name, ','), 'mcp') ||
+      true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        working-directory: mcp-server
+        run: pip install -r requirements.txt
+
+      - name: Lint
+        working-directory: mcp-server
+        run: python -m py_compile src/server.py
+
+      - name: Test
+        working-directory: mcp-server
+        run: python -m pytest tests/ -v
+
+  orchestrator:
+    name: Orchestrator
+    runs-on: ubuntu-latest
+    if: >
+      github.event_name == 'push' ||
+      contains(join(github.event.pull_request.labels.*.name, ','), 'orchestrator') ||
+      true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        working-directory: orchestrator
+        run: pip install -r requirements.txt
+
+      - name: Lint
+        working-directory: orchestrator
+        run: python -m py_compile agent.py
+
+      - name: Test
+        working-directory: orchestrator
+        run: python -m pytest tests/ -v
+
+  docker:
+    name: Docker lint
+    runs-on: ubuntu-latest
+    if: >
+      github.event_name == 'push' ||
+      contains(join(github.event.pull_request.labels.*.name, ','), 'deploy') ||
+      true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lint Dockerfile.agent
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: deploy/docker/Dockerfile.agent
+
+      - name: Lint Dockerfile.mcp
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: deploy/docker/Dockerfile.mcp
